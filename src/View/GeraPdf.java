@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Vector;
+import model.data_acess_object.clienteDAO;
 import model.data_acess_object.relatorioDAO;
 import model.value_object.Relatorio;
 import projecto_poo.Pessoa;
@@ -580,7 +581,11 @@ public class GeraPdf {
         new GeraPdf();
     }
     
-    public void reciboPdf() throws ParseException {
+    public void reciboPdf(String valor, String id) throws ParseException {
+        
+        clienteDAO c = new clienteDAO();
+        model.value_object.Cliente dados = c.validaID(Integer.parseInt(id));
+        
         dataAtual = dataFormatada.format(dataFormatada.parse(dataFormatada.format(gc.getTime())));
         path = System.getProperty("user.dir") + "/recibo.pdf";
         doc = new com.itextpdf.text.Document();
@@ -618,7 +623,7 @@ public class GeraPdf {
             
             //Info nr recibo e quantia
             tableSuperior = new PdfPTable(4);
-            infoLogo = new PdfPCell(new Paragraph(new Phrase("2000 MT",fontA)));
+            infoLogo = new PdfPCell(new Paragraph(new Phrase(valor+" MT",fontA)));
             cel24 = new PdfPCell(new Paragraph("RECIBO No.  #000034", fontB));
             celBranco1 = new PdfPCell(new Paragraph("", fontH2));
             quebraLinha1 = new PdfPCell(new Paragraph(new Phrase("\n")));
@@ -638,14 +643,14 @@ public class GeraPdf {
             doc.add(tableSuperior); 
             
             //Variaveis de teste info
-            String nomeCliente = "Isidro Bata";
-            String quantia = "Dois mil e cinquenta meticais";
-            String referente = "Pagamento do emprestimo da nona prestacao";
+            String nomeCliente = dados.getNome();
+            String quantia = "";
+            String referente = "";
           
             //Info do recibo
             infoRec = new PdfPTable(1);
             infoRecConteudo = new PdfPCell(new Paragraph(new Phrase(
-                    "\n\nRecebemos do (a) Exmo Sr.(a)   "+nomeCliente.toUpperCase()+"  a quantia de "+quantia.toUpperCase()+""
+                    "\n\nRecebemos do (a) Exmo Sr.(a)   "+nomeCliente.toUpperCase()+"  a quantia de "+valor+""
                      + "\nreferente a      "+referente.toUpperCase()+"    que passamos o presente recibo."
                      + "\n\nMetodo de pagamento usado ........."
                      + ".................\n\n\n"
@@ -727,9 +732,8 @@ public class GeraPdf {
             doc.add(tableSuperior); 
             
             //Info do recibo
-            infoRec = new PdfPTable(1);
             infoRecConteudo = new PdfPCell(new Paragraph(new Phrase(
-                    "\n\nRecebemos do (a) Exmo Sr.(a)   "+nomeCliente.toUpperCase()+"  a quantia de "+quantia.toUpperCase()+""
+                    "\n\nRecebemos do (a) Exmo Sr.(a)   "+nomeCliente.toUpperCase()+"  a quantia de "+valor+""
                      + "\nreferente a      "+referente.toUpperCase()+"    que passamos o presente recibo."
                      + "\n\nMetodo de pagamento usado ........."
                      + ".................\n\n\n"

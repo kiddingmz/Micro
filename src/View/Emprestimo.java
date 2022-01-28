@@ -11,6 +11,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 /**
@@ -193,7 +196,7 @@ public class Emprestimo extends JDialog implements ActionListener{
         new Emprestimo(id);
     }
     @Override
-    public void actionPerformed(ActionEvent ae) {
+    public void actionPerformed(ActionEvent ae){
         if(ae.getSource()==btnSearch){
             ctrCli=new ctrCliente();
             boolean scc=ctrCli.encontrar(Integer.parseInt(inID.getText()));
@@ -234,10 +237,16 @@ public class Emprestimo extends JDialog implements ActionListener{
             boolean scc = false;
             
                 if(ctrAtivo.updateCapital(Float.parseFloat(inVpr.getText()), 0)){
-                     JOptionPane.showMessageDialog(null, "Salvo Com Sucesso!");
-                     if(!ctrEmp.salvarEmp())
-                         JOptionPane.showMessageDialog(null, "ERRO ","ERRO",JOptionPane.ERROR_MESSAGE);
-                     this.dispose();
+                try {
+                    JOptionPane.showMessageDialog(null, "Salvo Com Sucesso!");
+                    GeraPdf p = new GeraPdf();
+                    p.reciboPdf(inVpr.getText(), inID.getText());
+                    if(!ctrEmp.salvarEmp())
+                        JOptionPane.showMessageDialog(null, "ERRO ","ERRO",JOptionPane.ERROR_MESSAGE);
+                    this.dispose();
+                } catch (ParseException ex) {
+                    Logger.getLogger(Emprestimo.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 }
                 else
                     JOptionPane.showMessageDialog(null, "ERRO ","Não é possivel fazer o emprestimo",JOptionPane.ERROR_MESSAGE);
