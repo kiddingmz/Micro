@@ -5,6 +5,8 @@
  */
 package View;
 
+import Controller.ctrAtivo;
+import static Controller.ctrAtivo.updateCapitalL;
 import Controller.ctrEmprestimo;
 import java.awt.Color;
 import java.awt.Font;
@@ -19,7 +21,7 @@ import model.business_object.manageEmprestimo;
  */
 public class payEmp extends JDialog implements ActionListener{
     JLabel lblCoin, lblMet, lblInfo, lblValor, lblID;
-    JTextField entryID,entryVl;
+    public JTextField entryID,entryVl;
     JButton pay, canc;
     JPanel all;
     JComboBox jcbMet;
@@ -115,8 +117,10 @@ public class payEmp extends JDialog implements ActionListener{
         if(ae.getSource()==pay){
             ctrEmprestimo ce=new ctrEmprestimo();
             boolean res=ce.payment(Integer.parseInt(entryID.getText()), Float.parseFloat(entryVl.getText()));
-            if(res==true)
-                JOptionPane.showMessageDialog(null, "Pagamento Realizado Com Sucesso!");
+            if(res==true){
+                if(ctrAtivo.updateCapitalL(Float.parseFloat(entryVl.getText())))
+                  JOptionPane.showMessageDialog(null, "Pagamento Realizado Com Sucesso!");
+            }
             else
                 JOptionPane.showMessageDialog(null, "Pagamento Falhou!");
             dispose();

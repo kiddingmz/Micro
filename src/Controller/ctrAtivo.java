@@ -46,4 +46,25 @@ public class ctrAtivo {
         
         return false;
     }
+    
+    public static boolean updateCapitalL(double liq){
+        
+        ativoDAO atd = new ativoDAO();
+        ctrAtivo c = new ctrAtivo();
+       
+        double sal = c.getList().get(0).getSaldo() + liq;
+        double lq = liq + c.getList().get(0).getLiq();
+        double ep = c.getList().get(0).getEmp() - liq;
+        
+        String sql = "Update ativo set saldo="
+                +sal+",emp="+
+                ep+""
+                + ",liq="
+                +lq+" where id=1";
+        
+        if(atd.create(sql))
+            return true;
+        
+        return false;
+    }
 }
